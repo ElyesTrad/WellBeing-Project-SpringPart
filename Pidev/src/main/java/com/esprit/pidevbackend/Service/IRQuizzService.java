@@ -4,12 +4,11 @@ import com.esprit.pidevbackend.Domain.RQuizz;
 
 import java.util.List;
 
-public interface IRQuizzSevice {
+public interface IRQuizzService {
     public void AddRQuizz(RQuizz e);
     public List<RQuizz> getAllRQuizz();
-    public void DeleteRQuizz(int id);
+    public void DeleteRQuizz(Long id);
     public void UpdateRQuizz(RQuizz e);
-    public void AddRQuizzToQuizz(RQuizz e, int idQuizz);
-    public RQuizz SelectRquizz(int id);
-
+    public void AddRQuizzToQuizz(RQuizz e, Long idQuizz);
+    public RQuizz SelectRquizz(Long id);
 }

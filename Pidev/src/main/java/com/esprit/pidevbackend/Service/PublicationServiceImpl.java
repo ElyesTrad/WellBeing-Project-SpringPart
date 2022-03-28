@@ -1,9 +1,9 @@
 package com.esprit.pidevbackend.Service;
 
-import com.WellBeingProject.GetCloser.Entity.Account;
-import com.WellBeingProject.GetCloser.Entity.Publication;
-import com.WellBeingProject.GetCloser.Repository.AccountRepo;
-import com.WellBeingProject.GetCloser.Repository.PublicationRepository;
+import com.esprit.pidevbackend.Domain.Publication;
+import com.esprit.pidevbackend.Domain.User;
+import com.esprit.pidevbackend.Repository.PublicationRepository;
+import com.esprit.pidevbackend.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ public class PublicationServiceImpl implements IPublicationService {
     @Autowired
     PublicationRepository publicationRepository;
     @Autowired
-    AccountRepo accountRepo;
+    UserRepository accountRepo;
     @Override
     public void AddPublication(Publication e) {
        publicationRepository.save(e);
@@ -28,7 +28,7 @@ public class PublicationServiceImpl implements IPublicationService {
     }
 
     @Override
-    public void DeletePublication(int id) {
+    public void DeletePublication(Long id) {
         publicationRepository.deleteById(id);
     }
 
@@ -38,11 +38,20 @@ public class PublicationServiceImpl implements IPublicationService {
     }
 
     @Override
-    public void AddPublicationToUser(Publication e, int id) {
-        Account account=accountRepo.findById(id).orElse(null);
+    public void AddPublicationToUser(Publication e, Long id) {
+        User account=accountRepo.findById(id).orElse(null);
         publicationRepository.save(e);
-        e.setAccount(account);
+        e.setUser(account);
+    }
 
+    @Override
+    public int countAllPublicationByUser(Long idUser) {
+        return publicationRepository.countAllPublicationByUser(idUser);
+    }
+
+    @Override
+    public List<Publication> GetAllPubByUser(Long idUser) {
+        return GetAllPubByUser(idUser);
     }
 
 

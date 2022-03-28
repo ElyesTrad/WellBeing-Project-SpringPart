@@ -1,15 +1,15 @@
 package com.esprit.pidevbackend.Service;
 
-import com.WellBeingProject.GetCloser.Entity.Publication;
+import com.esprit.pidevbackend.Domain.Publication;
 
 import java.util.List;
 
 public interface IPublicationService {
     public void AddPublication(Publication e);
     public List<Publication> getAllPublication();
-    public void DeletePublication(int id);
+    public void DeletePublication(Long id);
     public void UpdatePublication(Publication e);
-    public void AddPublicationToUser(Publication e, int id) ;
-
-
+    public void AddPublicationToUser(Publication e, Long id) ;
+    public int countAllPublicationByUser(Long idUser);
+    public List<Publication> GetAllPubByUser(Long idUser);
 }

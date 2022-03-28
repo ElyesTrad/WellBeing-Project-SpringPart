@@ -1,9 +1,9 @@
 package com.esprit.pidevbackend.Service;
 
-import com.WellBeingProject.GetCloser.Entity.QVT;
-import com.WellBeingProject.GetCloser.Entity.Question;
-import com.WellBeingProject.GetCloser.Repository.QVTRepsitory;
-import com.WellBeingProject.GetCloser.Repository.QuestionRepository;
+import com.esprit.pidevbackend.Domain.QVT;
+import com.esprit.pidevbackend.Domain.Question;
+import com.esprit.pidevbackend.Repository.QVTRepsitory;
+import com.esprit.pidevbackend.Repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ import java.util.List;
 @Transactional
 public class QuestionServiceImpl implements IQuestionService {
     @Autowired
-    QuestionRepository  questionRepository;
+    QuestionRepository questionRepository;
     @Autowired
     QVTRepsitory qvtRepsitory;
     @Override
@@ -28,7 +28,7 @@ public class QuestionServiceImpl implements IQuestionService {
     }
 
     @Override
-    public void DeleteQuestion(int id) {
+    public void DeleteQuestion(Long id) {
     questionRepository.deleteById(id);
     }
 
@@ -38,10 +38,15 @@ public class QuestionServiceImpl implements IQuestionService {
     }
 
     @Override
-    public void AddQuestionToQuizz(Question e, int idQuizz) {
+    public void AddQuestionToQuizz(Question e, Long idQuizz) {
         QVT qvt=qvtRepsitory.findById(idQuizz).orElse(null);
         questionRepository.save(e);
         qvt.getQuestions().add(e);
+    }
+
+    @Override
+    public List<Question> findAllQuestionByQVT(Long idQVT) {
+        return questionRepository.findAllQuestionByQVT(idQVT);
     }
 
 

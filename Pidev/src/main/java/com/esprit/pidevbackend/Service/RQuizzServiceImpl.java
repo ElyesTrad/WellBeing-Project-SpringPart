@@ -1,9 +1,9 @@
 package com.esprit.pidevbackend.Service;
 
-import com.WellBeingProject.GetCloser.Entity.QVT;
-import com.WellBeingProject.GetCloser.Entity.RQuizz;
-import com.WellBeingProject.GetCloser.Repository.QVTRepsitory;
-import com.WellBeingProject.GetCloser.Repository.RQuizzRepo;
+import com.esprit.pidevbackend.Domain.QVT;
+import com.esprit.pidevbackend.Domain.RQuizz;
+import com.esprit.pidevbackend.Repository.QVTRepsitory;
+import com.esprit.pidevbackend.Repository.RQuizzRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class RQuizzServiceImpl implements IRQuizzSevice {
+public class RQuizzServiceImpl implements IRQuizzService {
     @Autowired
     RQuizzRepo rQuizzRepo;
     @Autowired
@@ -28,7 +28,7 @@ public class RQuizzServiceImpl implements IRQuizzSevice {
     }
 
     @Override
-    public void DeleteRQuizz(int id) {
+    public void DeleteRQuizz(Long id) {
         rQuizzRepo.deleteById(id);
     }
 
@@ -38,13 +38,13 @@ public class RQuizzServiceImpl implements IRQuizzSevice {
     }
 
     @Override
-    public void AddRQuizzToQuizz(RQuizz e, int idQuizz) {
+    public void AddRQuizzToQuizz(RQuizz e, Long idQuizz) {
         QVT qvt= qvtRepsitory.findById(idQuizz).orElse(null);
         rQuizzRepo.save(e);
         qvt.setRQuizzes(e);
     }
 
-    public RQuizz SelectRquizz( int id){
+    public RQuizz SelectRquizz( Long id){
         return rQuizzRepo.SelectRquizz(id);
     }
 
