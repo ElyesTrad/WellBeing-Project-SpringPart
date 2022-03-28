@@ -11,10 +11,11 @@ import java.util.Date;
 public class CommentPub implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private Date date;
     private String description;
-    @ManyToOne
+    private boolean IsBlocked;
+    @ManyToOne(cascade = CascadeType.ALL)
     private Publication publication;
     @ManyToOne
     private User user;

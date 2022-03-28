@@ -11,21 +11,20 @@ import java.util.Set;
 public class Answer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     @Enumerated(EnumType.STRING)
     private TypeAnswer typeAnswer;
-    private String answer;
     private boolean ResponseUser;
     @ManyToOne
     private Question question;
     @ManyToMany
     private Set<User> users;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -37,19 +36,11 @@ public class Answer implements Serializable {
         this.typeAnswer = typeAnswer;
     }
 
-    public String getAnswer() {
-        return answer;
-    }
-
-    public void setAnswer(String answer) {
-        this.answer = answer;
-    }
-
-    public Set<User> getAccounts() {
+    public Set<User> getUsers() {
         return users;
     }
 
-    public void setAccounts(Set<User> users) {
+    public void setUsers(Set<User> users) {
         this.users = users;
     }
 

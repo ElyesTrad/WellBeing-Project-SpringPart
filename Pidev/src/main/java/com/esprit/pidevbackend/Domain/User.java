@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,12 +27,29 @@ public class User implements Serializable {
     Long id ;
     String name ;
     String username ;
+    String email;
     String password ;
     String picture ;
+    String token;
+    @Enumerated(EnumType.STRING)
+    private Departement departement;
+    @Enumerated(EnumType.STRING)
+    private Office office;
+    @Enumerated(EnumType.STRING)
+    private IneterestCenter ineterestCenter;
+    @Column(columnDefinition = "TIMESTAMP")
+    LocalDateTime tokenCreationDate;
     @ManyToMany(fetch = FetchType.EAGER)
     @JsonIgnore
     Collection<Role> roles = new ArrayList<>();
-    // jma3aa
+
+
+
+
+
+
+
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     @OneToOne(mappedBy="user")
     @JsonIgnore
     Achievements achievements ;
@@ -55,9 +74,11 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     Set<CommentPub>commentPubs;
-    @ManyToMany(mappedBy = "users")
+    @OneToOne(mappedBy = "users")
     @JsonIgnore
-    Set<LikePub> likePubs;
+    LikePub likePubs;
+    @OneToOne()
+    private ConseilsUser conseilsUser;
     @ManyToOne
     @JsonIgnore
     Team team;

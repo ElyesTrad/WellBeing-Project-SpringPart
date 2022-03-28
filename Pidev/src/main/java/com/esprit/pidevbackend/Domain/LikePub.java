@@ -11,12 +11,11 @@ import java.util.Set;
 public class LikePub implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id ;
+    private Long id ;
     @Enumerated(EnumType.STRING)
     private EnumLike enumLike;
-    @ManyToMany
+    @ManyToMany(mappedBy = "likePubs")
     private Set<Publication> publications;
-    @ManyToMany
-    private Set<User> users;
-
+    @OneToOne
+    private  User users;
 }

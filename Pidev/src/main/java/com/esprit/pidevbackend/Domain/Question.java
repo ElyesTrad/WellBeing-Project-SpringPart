@@ -11,11 +11,10 @@ import java.util.Set;
 public class Question implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     @Enumerated(EnumType.STRING)
     private TypeQuestion typeQuestion;
     private String Question;
-    private boolean obligatory;
     @ManyToOne
     private QVT qvt;
     @OneToMany(mappedBy = "question")

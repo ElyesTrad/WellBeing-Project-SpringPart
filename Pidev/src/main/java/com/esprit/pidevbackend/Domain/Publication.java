@@ -11,14 +11,15 @@ import java.util.Set;
 public class Publication implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     @Enumerated(EnumType.STRING)
     private TypePub typePub;
     private String Statut;
+    private boolean IsBlocked;
     @ManyToOne
     private User user;
-    @OneToMany(mappedBy = "publication")
+    @OneToMany(mappedBy = "publication",cascade = CascadeType.ALL)
     private Set<CommentPub> commentPub;
-    @ManyToMany(mappedBy = "publications")
+    @ManyToMany
     private Set<LikePub> likePubs;
 }

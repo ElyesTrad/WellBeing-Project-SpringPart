@@ -1,20 +1,27 @@
 package com.esprit.pidevbackend.Domain;
 
 import java.io.Serializable;
+
 import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.*;
 
-import lombok.*;
 
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+
 @Entity
+
 public class Collaboration implements Serializable {
 
 
@@ -28,11 +35,12 @@ public class Collaboration implements Serializable {
 	Date date;
 	String rate ;
 	String town;
-
+	
 
 	@OneToMany(mappedBy="collaboration", cascade=CascadeType.ALL)
 	private Set<Offer> offers;
-
+	
 	@ManyToOne
 	User users;
+
 }

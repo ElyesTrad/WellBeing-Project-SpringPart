@@ -28,15 +28,15 @@ public class Event implements Serializable {
     private Date date;
     private Date finalDateRquest;
     @Enumerated(EnumType.STRING)
-    private IneterestCenter ineterestCenter ;
+    private IneterestCenter ineterestCenter;
 
-@JsonIgnore
+    @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)
     private Set<User> users;
-@JsonIgnore
+    @JsonIgnore
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     private List<Commentaire> commentaires;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<User> userList;
+
 }
+

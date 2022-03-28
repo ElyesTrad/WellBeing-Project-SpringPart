@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class RQuizz implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private int PourCentageBAD;
     private int PourCentageGood;
     private int PourCentageEx;
@@ -32,7 +32,7 @@ public class RQuizz implements Serializable {
         this.totalResponse = totalResponse;
     }
 
-    public RQuizz(int id, int pourCentageBAD, int pourCentageGood, int pourCentageEx, String remarque, Note note, int totalResponse) {
+    public RQuizz(Long id, int pourCentageBAD, int pourCentageGood, int pourCentageEx, String remarque, Note note, int totalResponse) {
         this.id = id;
         PourCentageBAD = pourCentageBAD;
         PourCentageGood = pourCentageGood;

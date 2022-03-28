@@ -11,11 +11,11 @@ import java.util.Date;
 public class Opinion implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     @Enumerated(EnumType.STRING)
     private TypeEmotions typeEmotions;
     private String description;
-    private boolean Visibility;
+    private boolean IsBlocked;;
     private Date date;
     @ManyToOne
     private User user;

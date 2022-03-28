@@ -1,23 +1,16 @@
 package com.esprit.pidevbackend.Domain;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import java.util.Date;
-
-@Transactional
-@Setter
-
-@Getter
-
-@AllArgsConstructor
-
-@NoArgsConstructor
-
-@ToString
-
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Commentaire {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,9 +18,12 @@ public class Commentaire {
     private String description;
     @Temporal(TemporalType.DATE)
     private Date date;
+    private Boolean IsBlocked;
+
+    @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
     private Event event;
-
+    @JsonIgnore
     @ManyToOne
     private User user;
 }

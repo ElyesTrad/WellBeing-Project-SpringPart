@@ -12,7 +12,7 @@ import java.util.Set;
 public class QVT implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private String description;
     private Date date;
     private int nbrQuestion;
@@ -20,5 +20,4 @@ public class QVT implements Serializable {
     private Set<Question> questions;
     @OneToOne
     private RQuizz rQuizzes;
-
 }
