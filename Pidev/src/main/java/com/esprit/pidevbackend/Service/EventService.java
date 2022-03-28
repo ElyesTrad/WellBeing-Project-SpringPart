@@ -1,10 +1,9 @@
 package com.esprit.pidevbackend.Service;
 
-import com.example.EventManage.entities.Event;
-import com.example.EventManage.entities.User;
-import com.example.EventManage.enumeration.Departement;
-import com.example.EventManage.enumeration.Office;
 
+import com.esprit.pidevbackend.Domain.*;
+
+import javax.mail.MessagingException;
 import java.util.Date;
 import java.util.List;
 
@@ -40,4 +39,21 @@ public interface EventService {
     List<User> ListParticipantBeforeSystemDate();
 
     List<String> ListUserByEvent(Long idEvent);
+
+    List<User> ListParticipantEvent(Long idEvent);
+
+
+    List<Event> getEventOneDayBefore();
+
+    public void afficherListEmail();
+
+  //  Response sendListEmail(List<String> Listmail, Event event);
+
+    List<String> sendEventToUserByInterestCenter(IneterestCenter ineterestCenter);
+
+    public void sendEmailNotifAgent() throws MessagingException;
+
+    public String toPDF(Long idEvent);
+
+
 }

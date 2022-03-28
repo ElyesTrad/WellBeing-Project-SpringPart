@@ -1,9 +1,7 @@
 package com.esprit.pidevbackend.Repository;
 
-import com.example.EventManage.entities.Event;
-import com.example.EventManage.entities.User;
-import com.example.EventManage.enumeration.Departement;
-import com.example.EventManage.enumeration.Office;
+
+import com.esprit.pidevbackend.Domain.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,10 +21,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query("select u from User u join u.events v where v.id=:id and u.departement=:dep ")
     public List<User> afficherParticipantByDepartement(@Param("id") Long idEvent, @Param("dep") Departement departement);
 
-    @Query("select u from Event u where  u.date >:date ")
+    @Query("select u from Event u where  u.date =:date ")
+        //SELECT *  FROM `event` WHERE  date(date) = DATE_ADD(CURRENT_DATE,INTERVAL 1 DAY)
     List<Event> ListEventBeforeSystemeDate(@Param("date") Date date);
 
-    @Query(value = "SELECT DATE_ADD (CURRENT_DATE, INTERVAL 1 DAY)", nativeQuery = true)
+    @Query(value = "SELECT DATE_ADD(CURRENT_DATE,INTERVAL 1 DAY)", nativeQuery = true)
     public Date dateTomorrow();
 
 
@@ -34,8 +33,20 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<User> ListParticipantBeforeSystemDate();
 
 
+
+
+    @Query("select u from User u join u.events v where v.id=:id")
+    List<User> ListParticipantEvent(@Param("id") Long idEvent);
+
+
+
     @Query("select u.email from User u join u.events v where v.id=:id ")
     public List<String> ListUserByEvent(@Param("id") Long idEvent);
 
+    @Query(value = "select * from event  where  date(date) = DATE_ADD(CURRENT_DATE,INTERVAL 1 DAY)", nativeQuery = true)
+    List<Event> getEventOneDayBefore();
+
+@Query("select x.email  from User x join x.events v where x.ineterestCenter=:interestCenter ")
+List<String> sendEventToUserByInterestCenter(@Param("interestCenter") IneterestCenter ineterestCenter);
 
 }

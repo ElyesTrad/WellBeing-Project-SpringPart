@@ -27,6 +27,8 @@ public class User implements Serializable {
     String username ;
     String password ;
     String picture ;
+    String email ;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JsonIgnore
     Collection<Role> roles = new ArrayList<>();
