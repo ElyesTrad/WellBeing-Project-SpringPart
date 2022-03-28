@@ -33,7 +33,6 @@ public class Collaboration implements Serializable {
 	int phone;
 	String email;
 	Date date;
-	String rate ;
 	String town;
 	
 

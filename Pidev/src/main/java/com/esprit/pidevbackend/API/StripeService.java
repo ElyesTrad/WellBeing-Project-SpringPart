@@ -1,10 +1,14 @@
 package com.esprit.pidevbackend.API;
 
 import com.esprit.pidevbackend.Domain.Payment;
+import com.esprit.pidevbackend.Domain.Reservation;
 import com.esprit.pidevbackend.Domain.User;
+import com.esprit.pidevbackend.Repository.ICollaboration;
+import com.esprit.pidevbackend.Repository.IReservation;
 import com.esprit.pidevbackend.Repository.UserRepository;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
+import com.stripe.model.Charge;
 import com.stripe.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,21 +23,50 @@ public class StripeService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    IReservation reservationRepo;
+
     @Value("sk_test_51KhM0dLVKNxUp7QKaSYm5RgoKdyz63FcA8J4yGCR5QpO6nrroYsbsITZu5YEcURxo5erVDTmGG25XWAC6cvfqztK00TbzVhB6d")
     String stripeKey;
 
-    public Payment payment(long idUser , Payment p) throws StripeException {
-        Stripe.apiKey= stripeKey;
+    public Payment payment(long idUser, long idReservation, Payment p) throws StripeException {
+        Stripe.apiKey = stripeKey;
         User user = userRepository.findById(idUser).get();
+        Reservation reservation = reservationRepo.findById(idReservation).get();
         Map<String, Object> params = new HashMap<>();
-        params.put("name",user.getName());
-        params.put("email",user.getEmail());
-        params.put("amount","");
+        params.put("name", user.getName());
+        params.put("email", user.getEmail());
+        params.put("amount*100", reservation.getPriceTotal());
+        //params.put("created",p.getCreated());
         Customer customer = Customer.create(params);
         p.setCustomerId(customer.getId());
         return p;
     }
 
 
+    public Reservation createCharge(String email, String token, Long idUser, Long idReservation, Long idOffer, Reservation r) throws StripeException {
+        User user = userRepository.findById(idUser).get();
+        Reservation reservation = reservationRepo.findById(idReservation).get();
+        String id;
+        Stripe.apiKey = stripeKey;
+        Map<String, Object> chargeParams = new HashMap<>();
+        chargeParams.put("amount", Math.round(reservation.getPriceTotal() * 100));
+        chargeParams.put("currency", "usd");
+        chargeParams.put("receipt_email", email);
+        chargeParams.put("description", "Charge for " + email);
+
+        //create a charge
+        Charge charge = Charge.create(chargeParams);
+        id = charge.getId();
+        if (id == null) {
+            throw new RuntimeException("Something went wrong!");
+        }
+
+        return reservation;
+    }
+
 
 }
+
+
+

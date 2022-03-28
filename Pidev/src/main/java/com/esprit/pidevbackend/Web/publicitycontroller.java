@@ -33,16 +33,6 @@ public class publicitycontroller {
         publicityService.addPublicity(p,idOffer);
     }
 
-    //http://localhost:8085/Offer/datePublicity/idPublicity/starDate/finDate
-    @GetMapping("/datePublicity/{idPublicity}/{starDateOf}/{finDateOf}")
-    @ResponseBody
-    public boolean dateOffer(@PathVariable long idPublicity, @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date starDateOf, @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date finDateOf){
-        return   publicityService.dateOffer(idPublicity,starDateOf,finDateOf);
-    }
-
-
-
-
     @PostMapping("/uploadImage")
     @ResponseBody
     public ResponseEntity<Object> uploadImage(@RequestParam MultipartFile imageFile, Model model , Publicity publicity) throws IOException {

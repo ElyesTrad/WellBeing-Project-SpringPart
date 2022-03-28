@@ -1,6 +1,7 @@
 package com.esprit.pidevbackend.Domain;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -30,8 +31,8 @@ public class Publicity implements Serializable {
 	long idPublicity;
 	String title;
 	String description;
-	Date starDatePub;
-	Date endDatePub;
+	LocalDateTime starDatePub;
+	LocalDateTime endDatePub;
 	String picture;
 
 	@ManyToOne

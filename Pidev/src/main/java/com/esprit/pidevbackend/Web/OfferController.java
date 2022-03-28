@@ -17,14 +17,14 @@ public class OfferController {
 
     private ICollaborationService offerService;
 
-    //http://localhost:8080/addOffer
+    //http://localhost:8085/addOffer
     @PostMapping("/addOffer/{idCollaboration}")
     @ResponseBody
     public void addOffer(@RequestBody Offer o,@PathVariable long idCollaboration){
         offerService.addOffer(o,idCollaboration);
     }
 
-    //http://localhost:8080/deleteOffer/id
+    //http://localhost:8085/deleteOffer/id
     @DeleteMapping("/deleteOffer/{id}")
     @ResponseBody
     public void deleteOffer(@PathVariable Long id){
@@ -38,14 +38,14 @@ public class OfferController {
         return offerService.updateOffer(o);
     }
 
-    //http://localhost:8080/Offer/retrieveAllOffers
+    //http://localhost:8085/Offer/retrieveAllOffers
     @GetMapping("/Offer/retrieveAllOffers")
     @ResponseBody
     public List<Offer> retrieveAllOffers(){
         return offerService.retrieveAllOffers();
     }
 
-    //http://localhost:8080/Offer/retrieveAllOffers/id
+    //http://localhost:8085/Offer/retrieveAllOffers/id
     @GetMapping("/Offer/retrieveOffer/{id}")
     @ResponseBody
     public Offer retrieveOffer(@PathVariable Long id){
@@ -59,8 +59,9 @@ public class OfferController {
     }
 
 
-
-    @GetMapping("/weather")
+    //http://localhost:8085/Offer/weather/1
+    @GetMapping("/weather/{idOffer}")
+    @ResponseBody
     public Object getOfferWeather(@RequestParam Long idOffer) {
         return offerService.getOfferWeather(idOffer);
     }

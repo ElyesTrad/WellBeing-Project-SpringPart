@@ -34,9 +34,10 @@ public class Offer implements Serializable {
 	LocalDateTime endDateOf;
 	int nplaces;
 	float promotion;
-	int percentage;
+	float percentage=1;
 	String location;
 	float prix;
+	int rate;
 
 	
 	@Enumerated(EnumType.STRING)

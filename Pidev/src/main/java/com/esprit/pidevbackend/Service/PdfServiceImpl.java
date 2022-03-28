@@ -252,7 +252,7 @@ public class PdfServiceImpl implements IPdfService {
                         separator.setAlignment(Element.ALIGN_CENTER);
 
                         //titreee
-                        Paragraph titre2 = new Paragraph("DETAILS ABOUT EVENT ", catFont15B);
+                        Paragraph titre2 = new Paragraph("DETAILS ABOUT RESERVATION ", catFont15B);
                         titre2.setAlignment(Element.ALIGN_CENTER);
 
 
@@ -392,22 +392,46 @@ public class PdfServiceImpl implements IPdfService {
                         my_pdf_report.add(espace);
 
 
-                        Paragraph finPage1 = new Paragraph(" Responsable Events", smallBold);
+                        Paragraph finPage1 = new Paragraph(" Responsible Colaboration", smallBold);
                         finPage1.setAlignment(Element.ALIGN_RIGHT);
 
 
 ////////////////////////////Paageeeeeeeeeeeeeeeeee 2
-                        Paragraph titre21 = new Paragraph("Liste des participants : ", catFont17Bcour);
+                        Paragraph titre21 = new Paragraph(" : ", catFont17Bcour);
                         titre21.setAlignment(Element.ALIGN_CENTER);
                         PdfPTable table4 = new PdfPTable(3); // Create 2 columns in table.
-                        PdfPCell cell1 = new PdfPCell(new Paragraph("Nom"));
+                        PdfPCell cell1 = new PdfPCell(new Paragraph("Name"));
                         PdfPCell cell2 = new PdfPCell(new Paragraph("Email"));
-                        PdfPCell cell3 = new PdfPCell(new Paragraph("departement"));
+                        PdfPCell cell3 = new PdfPCell(new Paragraph("number places"));
+                       PdfPCell cell8 = new PdfPCell(new Paragraph("Price"));
                         table4.addCell(cell1);
                         table4.addCell(cell2);
                         table4.addCell(cell3);
+                       table4.addCell(cell8);
                         my_pdf_report.add(separator);
                         my_pdf_report.add(titre21);
+
+
+                            // Create cells
+
+                            PdfPCell cell5 = new PdfPCell(new Paragraph(""+u.getName()));
+                            PdfPCell cell6 = new PdfPCell(new Paragraph(""+u.getEmail()));
+                            PdfPCell cell7 = new PdfPCell(new Paragraph(""+r.getNmPalce()));
+                            PdfPCell cell9 = new PdfPCell(new Paragraph(""+r.getPriceTotal()));
+
+
+
+
+                            // Add cells in table
+
+                            table4.addCell(cell5);
+                            table4.addCell(cell6);
+                            table4.addCell(cell7);
+                            table4.addCell(cell9);
+
+                            //     my_pdf_report.add(table);
+
+
 
 
                         my_pdf_report.add(espace);

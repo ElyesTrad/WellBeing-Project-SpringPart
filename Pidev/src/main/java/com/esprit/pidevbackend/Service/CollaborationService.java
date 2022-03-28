@@ -1,13 +1,10 @@
 package com.esprit.pidevbackend.Service;
 
 import com.esprit.pidevbackend.API.UploadImage;
-import com.esprit.pidevbackend.API.WeatherService;
 import com.esprit.pidevbackend.Domain.*;
 import com.esprit.pidevbackend.Repository.*;
-import com.github.prominence.openweathermap.api.model.onecall.current.CurrentWeatherData;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.mail.MessagingException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -28,38 +23,21 @@ import java.util.List;
 public class CollaborationService implements ICollaborationService {
 
 	private IOffer OfferRepo;
-
-
 	private ICollaboration CollaborationRepo;
-
-
 	private IPublicity PublicityRepo;
-
-
 	private UserRepository userRepo;
-
 	private MailService mailService;
-
 	private IPdfService pdfService;
-
 	private WeatherService weatherService;
-
 	private UploadImage uploadImage;
-
-
+	private IReservation reservationRepo;;
 	//private WSService wsService;
-
-
-	IReservation reservationRepo;
-
-
 
 
 
 	@Override
 	public List<Collaboration> retrieveAllCollaborations() {
 		List<Collaboration> collaborations = (List<Collaboration>) CollaborationRepo.findAll();
-
 		return collaborations;
 	}
 
@@ -102,6 +80,7 @@ public class CollaborationService implements ICollaborationService {
 	public void addOffer(Offer o, long idCollaboration) {
 		Collaboration collaboration = CollaborationRepo.findById(idCollaboration).get();
 		o.setCollaboration(collaboration);
+		if(o.getRate() > 6) throw  new RuntimeException("You have passed rate");
 		OfferRepo.save(o);
 	}
 
@@ -118,7 +97,6 @@ public class CollaborationService implements ICollaborationService {
 	@Override
 	public Offer retrieveOffer(Long id) {
 		return OfferRepo.findById(id).orElse(null);
-
 	}
 
 
@@ -140,22 +118,6 @@ public class CollaborationService implements ICollaborationService {
 		return o.getPromotion();
 	}
 
-	@Override
-	public Object getOfferWeather(Long idOffer) {
-		Offer offer = OfferRepo.findById(idOffer).orElse(null);
-		CurrentWeatherData currentWeatherData = weatherService.getWeatherData(offer.getLocation());
-		LocalDate nextWeek = LocalDate.now().plusDays(7);
-		System.out.println(nextWeek);
-		LocalDate offerStartDate = offer.getStarDateOf().toLocalDate();
-		if (nextWeek.isBefore(offerStartDate) || nextWeek.isEqual(offerStartDate)) {
-			return currentWeatherData.getCurrent();
-		} else {
-			int idx = 7 - Period.between(offerStartDate, nextWeek).getDays();
-			return currentWeatherData.getDailyList().get(idx);
-		}
-
-	}
-
 	//publicity
 
 	@Override
@@ -166,10 +128,12 @@ public class CollaborationService implements ICollaborationService {
 
 	@Override
 	public Publicity addPublicity(Publicity p , long idOffer) {
-		Offer offer = OfferRepo.findById( idOffer).get();
+		Offer o = OfferRepo.findById( idOffer).get();
+		if(o.getStarDateOf().isAfter(p.getStarDatePub()))throw  new RuntimeException("You have passed the start date") ;
+		if(o.getEndDateOf().isBefore(p.getStarDatePub()))throw  new RuntimeException("You have passed the end date");
 		//p.setPicture();
 		//uploadImage.image();
-		p.setOffers(offer);
+		p.setOffers(o);
 		return PublicityRepo.save(p);
 	}
 
@@ -190,14 +154,17 @@ public class CollaborationService implements ICollaborationService {
 	}
 
 
+	@Scheduled(cron="*/60 * * * * *")
 	@Override
-	public boolean dateOffer(long idPublicity, Date starDateOf, Date finDateOf) {
+	public boolean dateOffer() {
 		boolean b = false;
+		long idPublicity=0;
+		Publicity p =PublicityRepo.findById(idPublicity).orElse(null);
 		LocalDate date = LocalDate.now();
-		if(date.equals(starDateOf)) {
+		if(p.getStarDatePub().equals(date)) {
 			OfferRepo.findById(idPublicity).orElse(null);
 			b=true;
-		}else if (date.equals(finDateOf)){
+		}else if (date.equals(p.getEndDatePub())){
 			OfferRepo.deleteById(idPublicity);
 			b=false;
 		}
@@ -210,30 +177,25 @@ public class CollaborationService implements ICollaborationService {
 	@Override
 	@Transactional
 	public Reservation reservation(long idUser, long idOffer, Reservation r)  {
-
 		User u = userRepo.findById(idUser).orElse(null);
 		Offer o = OfferRepo.findById(idOffer).orElse(null);
-		if(o.getNplaces()<r.getNmPalce()) throw  new RuntimeException("Nombre de place insufosant");
-		if(o.getStarDateOf().isAfter(r.getStartDateRes()))throw  new RuntimeException("Vous avez passer la date star") ;
-		if(o.getEndDateOf().isBefore(r.getEndDateRes()))throw  new RuntimeException("Vous avez passer la date fin");
+		if(o.getNplaces()<r.getNmPalce()) throw  new RuntimeException("Insufficient number of places");
+		if(o.getStarDateOf().isAfter(r.getStartDateRes()))throw  new RuntimeException("You have passed the start date") ;
+		if(o.getEndDateOf().isBefore(r.getEndDateRes()))throw  new RuntimeException("You have passed the end date");
 		r.setUserRes(u);
 		r.setOffersRes(o);
 		r.setPriceTotal(r.getNmPalce() * o.getPromotion());
-		//mailService.sendEmailReservation(idUser,idOffer);
+		mailService.sendEmailReservation(idUser,idOffer);
 		reservationRepo.save(r);
-		//pdfService.toPDFResrvation(idUser,idOffer);
+		pdfService.toPDFResrvation(idUser,idOffer);
 		o.setNplaces(o.getNplaces()-r.getNmPalce());
 		return r;
 	}
 
-
-
 	@Override
 	public float prixTotale(long idReservation) {
 		Reservation res =reservationRepo.findById(idReservation).get();
-
 		List<Reservation> r = (List<Reservation>) reservationRepo.findAll();
-		//Reservation re = new Reservation();
 		float t=0;
 		for(Reservation re : r){
 			if(re.getUserRes().getId() == res.getUserRes().getId()){
@@ -242,7 +204,6 @@ public class CollaborationService implements ICollaborationService {
 		}
 		return t;
 	}
-
 
 	@Override
 	public List<Reservation> findAll() {
@@ -253,7 +214,6 @@ public class CollaborationService implements ICollaborationService {
 	public List<Reservation> listAll() {
 		return reservationRepo.findAll();
 	}
-
 
 
 	@Scheduled(cron="*/30 * * * * *")
