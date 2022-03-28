@@ -10,9 +10,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface QVTRepsitory extends JpaRepository<QVT,Integer> {
-@Query("select a.typeAnswer from QVT u join u.questions q join q.answers a where u.id=:id and a.ResponseUser=true")
-    List<TypeAnswer> ListeAnswersQuizz(@Param("id") int idQuizz);
+public interface QVTRepsitory extends JpaRepository<QVT,Long> {
+    @Query(nativeQuery = true,value = "select a.answers_id from answer_users a")
+    List<Long> ListIdAnswerAffecteToUser();
+@Query("select a.typeAnswer from QVT u join u.questions q join q.answers a where u.id=:id and a.id=:ida ")
+    List<TypeAnswer> ListeAnswersQuizz(@Param("id") Long idQuizz,@Param("ida") Long a);
 @Query("select q.rQuizzes.id from QVT q where q.id=:id")
-    int selectIdResponse(@Param("id") int idQuizz);
+Long selectIdResponse(@Param("id") Long idQuizz);
 }
